@@ -4,14 +4,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Feather } from "@expo/vector-icons";
-// import { getHeaderTitle } from "@react-navigation/elements";
+import { getHeaderTitle } from "@react-navigation/elements";
 
 import LoginScreen from "./Screens/auth/LoginScreen/LoginScreen";
 import RegistrationScreen from "./Screens/auth/RegistrationScreen/RegistrationScreen";
 import PostsScreen from "./Screens/mainScreen/PostsScreen/PostsScreen";
 import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen/ProfileScreen";
-// import { getHeaderTitle } from "@react-navigation/elements";
+
+import Header from "./src/components/Header";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -19,7 +20,7 @@ const MainTab = createBottomTabNavigator();
 export const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <AuthStack.Navigator>
+      <AuthStack.Navigator initialRouteName="RegistrationScreen">
         <AuthStack.Screen
           name="LoginScreen"
           component={LoginScreen}
@@ -46,6 +47,7 @@ export const useRoute = (isAuth) => {
     >
       <MainTab.Screen
         options={{
+          headerShown: false,
           tabBarItemStyle: {
             marginTop: 9,
             maxWidth: 70,
@@ -62,6 +64,7 @@ export const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerTitle: "Create post",
           tabBarItemStyle: {
             marginTop: 9,
             maxWidth: 70,
@@ -69,6 +72,13 @@ export const useRoute = (isAuth) => {
             borderRadius: 20,
             marginLeft: 16,
             marginRight: 16,
+          },
+          header: ({ route, options, navigation }) => {
+            const title = getHeaderTitle(options, route.name);
+            const back = {
+              title: "Posts",
+            };
+            return <Header title={title} navigation={navigation} back={back} />;
           },
           tabBarIcon: ({ color, size }) => (
             <Feather name="plus" size={size} color={color} />

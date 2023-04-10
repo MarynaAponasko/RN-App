@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, createContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { StyleSheet, View } from "react-native";
@@ -11,7 +11,10 @@ import { useRoute } from "./router";
 
 SplashScreen.preventAutoHideAsync();
 
+export const AuthContext = createContext(null);
+
 export default function App() {
+  const [isAuth, setIsAuth] = useState(false);
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../myRNProject/assets/fonts/Roboto-Regular.ttf"),
   });
@@ -27,9 +30,11 @@ export default function App() {
     return null;
   }
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <NavigationContainer>{routing}</NavigationContainer>
-    </View>
+    <AuthContext.Provider value={{ isAuth, setIsAuth }}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
+        <NavigationContainer>{routing}</NavigationContainer>
+      </View>
+    </AuthContext.Provider>
   );
 }
 
